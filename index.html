@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Smart City Dashboard — Real-time monitoring and analytics for urban infrastructure, traffic, energy, water, and emergency services.">
+  <title>Smart City Dashboard — Urban Intelligence Platform</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <!-- Loading Screen -->
+  <div id="loading-screen" class="loading-screen">
+    <div class="loader-content">
+      <div class="loader-ring"><div></div><div></div><div></div><div></div></div>
+      <h2>Smart City Dashboard</h2>
+      <p>Initializing Urban Intelligence Platform…</p>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Notification Panel -->
+  <div id="notification-panel" class="notification-panel">
+    <div class="notif-header">
+      <h3><i class="fas fa-bell"></i> Notifications</h3>
+      <button id="clear-notifications-btn" class="btn-sm" title="Clear All"><i class="fas fa-trash-alt"></i></button>
+    </div>
+    <div id="notification-list" class="notif-list"></div>
+  </div>
+
+  <!-- Settings Panel -->
+  <div id="settings-panel" class="settings-panel">
+    <div class="settings-header">
+      <h3><i class="fas fa-cog"></i> Settings</h3>
+      <button id="close-settings-btn" class="btn-sm"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="settings-body">
+      <div class="setting-group">
+        <label>Theme</label>
+        <div class="toggle-group">
+          <button id="theme-dark-btn" class="toggle-btn active" data-theme="dark"><i class="fas fa-moon"></i> Dark</button>
+          <button id="theme-light-btn" class="toggle-btn" data-theme="light"><i class="fas fa-sun"></i> Light</button>
+        </div>
+      </div>
+      <div class="setting-group">
+        <label>Auto Refresh</label>
+        <div class="toggle-group">
+          <button id="auto-refresh-on" class="toggle-btn active" data-val="on"><i class="fas fa-sync-alt"></i> On</button>
+          <button id="auto-refresh-off" class="toggle-btn" data-val="off"><i class="fas fa-pause"></i> Off</button>
+        </div>
+      </div>
+      <div class="setting-group">
+        <label>Dashboard Layout</label>
+        <div class="toggle-group">
+          <button id="layout-grid" class="toggle-btn active" data-val="grid"><i class="fas fa-th"></i> Grid</button>
+          <button id="layout-list" class="toggle-btn" data-val="list"><i class="fas fa-list"></i> List</button>
+        </div>
+      </div>
+      <div class="setting-group">
+        <label>Notification Sound</label>
+        <div class="toggle-group">
+          <button id="notif-sound-on" class="toggle-btn active" data-val="on"><i class="fas fa-volume-up"></i> On</button>
+          <button id="notif-sound-off" class="toggle-btn" data-val="off"><i class="fas fa-volume-mute"></i> Off</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search Overlay -->
+  <div id="search-overlay" class="search-overlay">
+    <div class="search-modal">
+      <div class="search-input-wrap">
+        <i class="fas fa-search"></i>
+        <input type="text" id="search-input" placeholder="Search hospitals, schools, police stations, alerts, analytics…" autocomplete="off">
+        <kbd>ESC</kbd>
+      </div>
+      <div id="search-results" class="search-results"></div>
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon"><i class="fas fa-city"></i></div>
+      <span class="brand-text">SmartCity</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="#" class="nav-link active" data-section="overview"><i class="fas fa-tachometer-alt"></i><span>Overview</span></a>
+      <a href="#" class="nav-link" data-section="weather"><i class="fas fa-cloud-sun"></i><span>Weather</span></a>
+      <a href="#" class="nav-link" data-section="traffic"><i class="fas fa-traffic-light"></i><span>Traffic</span></a>
+      <a href="#" class="nav-link" data-section="air-quality"><i class="fas fa-wind"></i><span>Air Quality</span></a>
+      <a href="#" class="nav-link" data-section="emergency"><i class="fas fa-exclamation-triangle"></i><span>Emergencies</span></a>
+      <a href="#" class="nav-link" data-section="analytics"><i class="fas fa-chart-line"></i><span>Analytics</span></a>
+      <a href="#" class="nav-link" data-section="city-map"><i class="fas fa-map-marked-alt"></i><span>City Map</span></a>
+      <a href="#" class="nav-link" data-section="energy"><i class="fas fa-bolt"></i><span>Energy</span></a>
+      <a href="#" class="nav-link" data-section="water"><i class="fas fa-tint"></i><span>Water</span></a>
+      <a href="#" class="nav-link" data-section="system-health"><i class="fas fa-heartbeat"></i><span>System Health</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="version-badge">v2.4.0</div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main id="main-content" class="main-content">
+    <!-- Top Navigation -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button id="sidebar-toggle" class="icon-btn" title="Toggle Sidebar"><i class="fas fa-bars"></i></button>
+        <div id="city-clock" class="city-clock"></div>
+      </div>
+      <div class="topbar-right">
+        <button id="search-btn" class="icon-btn" title="Search (Ctrl+K)"><i class="fas fa-search"></i></button>
+        <button id="export-btn" class="icon-btn" title="Export Dashboard"><i class="fas fa-file-export"></i></button>
+        <div class="notif-bell-wrap">
+          <button id="notif-btn" class="icon-btn" title="Notifications"><i class="fas fa-bell"></i></button>
+          <span id="notif-count" class="notif-count" style="display:none;">0</span>
+        </div>
+        <button id="theme-toggle" class="icon-btn" title="Toggle Theme"><i class="fas fa-moon" id="theme-icon"></i></button>
+        <button id="settings-btn" class="icon-btn" title="Settings"><i class="fas fa-cog"></i></button>
+      </div>
+    </header>
+
+    <!-- Export Dropdown -->
+    <div id="export-menu" class="export-menu" style="display:none;">
+      <button id="export-pdf"><i class="fas fa-file-pdf"></i> Export as PDF</button>
+      <button id="export-report"><i class="fas fa-file-alt"></i> Download Report</button>
+      <button id="export-charts"><i class="fas fa-image"></i> Export Charts</button>
+    </div>
+
+    <!-- Sections -->
+    <div class="page-content">
+
+      <!-- OVERVIEW -->
+      <section id="section-overview" class="section active">
+        <div class="section-header">
+          <h1><i class="fas fa-tachometer-alt"></i> City Overview</h1>
+          <span class="live-badge"><span class="pulse-dot"></span> Live</span>
+        </div>
+        <div class="overview-grid" id="overview-grid">
+          <div class="stat-card" data-stat="population">
+            <div class="stat-icon pop"><i class="fas fa-users"></i></div>
+            <div class="stat-info">
+              <span class="stat-label">Total Population</span>
+              <span class="stat-value" id="stat-population">—</span>
+              <span class="stat-trend up" id="trend-population"><i class="fas fa-arrow-up"></i> +0.3%</span>
+            </div>
+          </div>
+          <div class="stat-card" data-stat="vehicles">
+            <div class="stat-icon vehicles"><i class="fas fa-car"></i></div>
+            <div class="stat-info">
+              <span class="stat-label">Active Vehicles</span>
+              <span class="stat-value" id="stat-vehicles">—</span>
+              <span class="stat-trend up" id="trend-vehicles"><i class="fas fa-arrow-up"></i> +1.2%</span>
+            </div>
+          </div>
+          <div class="stat-card" data-stat="power">
+            <div class="stat-icon power"><i class="fas fa-bolt"></i></div>
+            <div class="stat-info">
+              <span class="stat-label">Power Consumption</span>
+              <span class="stat-value" id="stat-power">—</span>
+              <span class="stat-trend down" id="trend-power"><i class="fas fa-arrow-down"></i> -2.1%</span>
+            </div>
+          </div>
+          <div class="stat-card" data-stat="water">
+            <div class="stat-icon water"><i class="fas fa-tint"></i></div>
+            <div class="stat-info">
+              <span class="stat-label">Water Usage</span>
+              <span class="stat-value" id="stat-water">—</span>
+              <span class="stat-trend up" id="trend-water"><i class="fas fa-arrow-up"></i> +0.8%</span>
+            </div>
+          </div>
+          <div class="stat-card" data-stat="emergency">
+            <div class="stat-icon emergency"><i class="fas fa-ambulance"></i></div>
+            <div class="stat-info">
+              <span class="stat-label">Emergency Cases</span>
+              <span class="stat-value" id="stat-emergency">—</span>
+              <span class="stat-trend down" id="trend-emergency"><i class="fas fa-arrow-down"></i> -5.4%</span>
+            </div>
+          </div>
+          <div class="stat-card" data-stat="sensors">
+            <div class="stat-icon sensors"><i class="fas fa-satellite-dish"></i></div>
+            <div class="stat-info">
+              <span class="stat-label">Active Sensors</span>
+              <span class="stat-value" id="stat-sensors">—</span>
+              <span class="stat-trend up" id="trend-sensors"><i class="fas fa-arrow-up"></i> +0.1%</span>
+            </div>
+          </div>
+          <div class="stat-card" data-stat="aqi">
+            <div class="stat-icon aqi"><i class="fas fa-leaf"></i></div>
+            <div class="stat-info">
+              <span class="stat-label">Air Quality Index</span>
+              <span class="stat-value" id="stat-aqi">—</span>
+              <span class="stat-trend down" id="trend-aqi"><i class="fas fa-arrow-down"></i> -1.6%</span>
+            </div>
+          </div>
+          <div class="stat-card" data-stat="traffic">
+            <div class="stat-icon traffic-density"><i class="fas fa-road"></i></div>
+            <div class="stat-info">
+              <span class="stat-label">Traffic Density</span>
+              <span class="stat-value" id="stat-traffic">—</span>
+              <span class="stat-trend up" id="trend-traffic"><i class="fas fa-arrow-up"></i> +3.2%</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- WEATHER -->
+      <section id="section-weather" class="section">
+        <div class="section-header">
+          <h1><i class="fas fa-cloud-sun"></i> Live Weather System</h1>
+          <span class="live-badge"><span class="pulse-dot"></span> Live</span>
+        </div>
+        <div class="weather-dashboard">
+          <div class="weather-main-card glass-card">
+            <div class="weather-icon-wrap">
+              <i id="weather-icon" class="fas fa-sun weather-big-icon"></i>
+            </div>
+            <div class="weather-main-info">
+              <div class="weather-temp" id="weather-temp">28°C</div>
+              <div class="weather-condition" id="weather-condition">Partly Cloudy</div>
+              <div class="weather-location"><i class="fas fa-map-marker-alt"></i> Metro City Central</div>
+            </div>
+          </div>
+          <div class="weather-details-grid">
+            <div class="weather-detail glass-card">
+              <i class="fas fa-temperature-high"></i>
+              <span class="wd-label">Feels Like</span>
+              <span class="wd-value" id="weather-feels">30°C</span>
+            </div>
+            <div class="weather-detail glass-card">
+              <i class="fas fa-tint"></i>
+              <span class="wd-label">Humidity</span>
+              <span class="wd-value" id="weather-humidity">65%</span>
+            </div>
+            <div class="weather-detail glass-card">
+              <i class="fas fa-wind"></i>
+              <span class="wd-label">Wind Speed</span>
+              <span class="wd-value" id="weather-wind">12 km/h</span>
+            </div>
+            <div class="weather-detail glass-card">
+              <i class="fas fa-compress-arrows-alt"></i>
+              <span class="wd-label">Pressure</span>
+              <span class="wd-value" id="weather-pressure">1013 hPa</span>
+            </div>
+            <div class="weather-detail glass-card">
+              <i class="fas fa-sun"></i>
+              <span class="wd-label">UV Index</span>
+              <span class="wd-value" id="weather-uv">6</span>
+            </div>
+            <div class="weather-detail glass-card">
+              <i class="fas fa-eye"></i>
+              <span class="wd-label">Visibility</span>
+              <span class="wd-value" id="weather-visibility">10 km</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TRAFFIC -->
+      <section id="section-traffic" class="section">
+        <div class="section-header">
+          <h1><i class="fas fa-traffic-light"></i> Traffic Simulation</h1>
+          <span class="live-badge"><span class="pulse-dot"></span> Live</span>
+        </div>
+        <div class="traffic-dashboard">
+          <div class="traffic-sim-card glass-card">
+            <h3>Road Network</h3>
+            <div class="traffic-canvas-wrap">
+              <canvas id="traffic-canvas" width="700" height="400"></canvas>
+            </div>
+          </div>
+          <div class="traffic-info-col">
+            <div class="traffic-stat glass-card">
+              <h4>Traffic Density</h4>
+              <div class="congestion-meter">
+                <div class="congestion-bar" id="congestion-bar"></div>
+              </div>
+              <span class="congestion-label" id="congestion-label">Moderate</span>
+            </div>
+            <div class="traffic-stat glass-card">
+              <h4>Active Vehicles</h4>
+              <span class="big-number" id="traffic-vehicle-count">1,247</span>
+            </div>
+            <div class="traffic-stat glass-card">
+              <h4>Average Speed</h4>
+              <span class="big-number" id="traffic-avg-speed">42 km/h</span>
+            </div>
+            <div class="traffic-stat glass-card">
+              <h4>Incidents</h4>
+              <span class="big-number text-warning" id="traffic-incidents">3</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- AIR QUALITY -->
+      <section id="section-air-quality" class="section">
+        <div class="section-header">
+          <h1><i class="fas fa-wind"></i> Air Quality Monitoring</h1>
+          <span class="live-badge"><span class="pulse-dot"></span> Live</span>
+        </div>
+        <div class="aqi-dashboard">
+          <div class="aqi-main glass-card">
+            <div class="aqi-gauge-wrap">
+              <canvas id="aqi-gauge" width="220" height="220"></canvas>
+            </div>
+            <div class="aqi-main-info">
+              <span class="aqi-big-number" id="aqi-value">72</span>
+              <span class="aqi-status" id="aqi-status">Moderate</span>
+              <span class="aqi-desc" id="aqi-desc">Air quality is acceptable. Sensitive groups may experience minor issues.</span>
+            </div>
+          </div>
+          <div class="aqi-pollutants-grid">
+            <div class="pollutant-card glass-card" id="poll-pm25">
+              <div class="poll-icon"><i class="fas fa-smog"></i></div>
+              <span class="poll-name">PM2.5</span>
+              <span class="poll-value" id="pm25-val">35</span>
+              <span class="poll-unit">µg/m³</span>
+              <div class="poll-bar-wrap"><div class="poll-bar" id="pm25-bar"></div></div>
+            </div>
+            <div class="pollutant-card glass-card" id="poll-pm10">
+              <div class="poll-icon"><i class="fas fa-smog"></i></div>
+              <span class="poll-name">PM10</span>
+              <span class="poll-value" id="pm10-val">58</span>
+              <span class="poll-unit">µg/m³</span>
+              <div class="poll-bar-wrap"><div class="poll-bar" id="pm10-bar"></div></div>
+            </div>
+            <div class="pollutant-card glass-card" id="poll-co2">
+              <div class="poll-icon"><i class="fas fa-cloud"></i></div>
+              <span class="poll-name">CO₂</span>
+              <span class="poll-value" id="co2-val">412</span>
+              <span class="poll-unit">ppm</span>
+              <div class="poll-bar-wrap"><div class="poll-bar" id="co2-bar"></div></div>
+            </div>
+            <div class="pollutant-card glass-card" id="poll-no2">
+              <div class="poll-icon"><i class="fas fa-industry"></i></div>
+              <span class="poll-name">NO₂</span>
+              <span class="poll-value" id="no2-val">22</span>
+              <span class="poll-unit">ppb</span>
+              <div class="poll-bar-wrap"><div class="poll-bar" id="no2-bar"></div></div>
+            </div>
+            <div class="pollutant-card glass-card" id="poll-so2">
+              <div class="poll-icon"><i class="fas fa-industry"></i></div>
+              <span class="poll-name">SO₂</span>
+              <span class="poll-value" id="so2-val">8</span>
+              <span class="poll-unit">ppb</span>
+              <div class="poll-bar-wrap"><div class="poll-bar" id="so2-bar"></div></div>
+            </div>
+            <div class="pollutant-card glass-card" id="poll-o3">
+              <div class="poll-icon"><i class="fas fa-shield-alt"></i></div>
+              <span class="poll-name">O₃</span>
+              <span class="poll-value" id="o3-val">45</span>
+              <span class="poll-unit">ppb</span>
+              <div class="poll-bar-wrap"><div class="poll-bar" id="o3-bar"></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- EMERGENCY -->
+      <section id="section-emergency" class="section">
+        <div class="section-header">
+          <h1><i class="fas fa-exclamation-triangle"></i> Emergency Alert Center</h1>
+          <div class="section-actions">
+            <span class="alert-counter">Active: <strong id="alert-count">0</strong></span>
+            <button id="add-alert-btn" class="btn btn-danger"><i class="fas fa-plus"></i> Add Alert</button>
+          </div>
+        </div>
+        <!-- Add Alert Modal -->
+        <div id="add-alert-modal" class="modal" style="display:none;">
+          <div class="modal-content glass-card">
+            <div class="modal-header">
+              <h3>Create Emergency Alert</h3>
+              <button id="close-alert-modal" class="btn-sm"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="alert-type-select">Alert Type</label>
+                <select id="alert-type-select">
+                  <option value="fire">🔥 Fire Emergency</option>
+                  <option value="medical">🏥 Medical Emergency</option>
+                  <option value="accident">🚗 Road Accident</option>
+                  <option value="flood">🌊 Flood Warning</option>
+                  <option value="power">⚡ Power Failure</option>
+                  <option value="water-leak">💧 Water Leakage</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="alert-severity-select">Severity</label>
+                <select id="alert-severity-select">
+                  <option value="low">Low</option>
+                  <option value="medium">Medium</option>
+                  <option value="high">High</option>
+                  <option value="critical">Critical</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="alert-location-input">Location</label>
+                <input type="text" id="alert-location-input" placeholder="e.g. Sector 7, Block B">
+              </div>
+              <div class="form-group">
+                <label for="alert-desc-input">Description</label>
+                <textarea id="alert-desc-input" rows="3" placeholder="Brief description of the emergency…"></textarea>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button id="submit-alert-btn" class="btn btn-danger"><i class="fas fa-exclamation-circle"></i> Create Alert</button>
+            </div>
+          </div>
+        </div>
+        <div id="alerts-list" class="alerts-list"></div>
+      </section>
+
+      <!-- ANALYTICS -->
+      <section id="section-analytics" class="section">
+        <div class="section-header">
+          <h1><i class="fas fa-chart-line"></i> City Analytics</h1>
+        </div>
+        <div class="charts-grid">
+          <div class="chart-card glass-card">
+            <h3>Population Growth</h3>
+            <canvas id="chart-population"></canvas>
+          </div>
+          <div class="chart-card glass-card">
+            <h3>Energy Consumption</h3>
+            <canvas id="chart-energy"></canvas>
+          </div>
+          <div class="chart-card glass-card">
+            <h3>Water Usage</h3>
+            <canvas id="chart-water"></canvas>
+          </div>
+          <div class="chart-card glass-card">
+            <h3>Traffic Trends</h3>
+            <canvas id="chart-traffic"></canvas>
+          </div>
+          <div class="chart-card glass-card">
+            <h3>Pollution Trends</h3>
+            <canvas id="chart-pollution"></canvas>
+          </div>
+          <div class="chart-card glass-card">
+            <h3>Emergency Statistics</h3>
+            <canvas id="chart-emergency"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- CITY MAP -->
+      <section id="section-city-map" class="section">
+        <div class="section-header">
+          <h1><i class="fas fa-map-marked-alt"></i> Interactive Smart City Map</h1>
+          <div class="map-controls">
+            <button id="map-zoom-in" class="btn-sm" title="Zoom In"><i class="fas fa-plus"></i></button>
+            <button id="map-zoom-out" class="btn-sm" title="Zoom Out"><i class="fas fa-minus"></i></button>
+            <button id="map-reset" class="btn-sm" title="Reset"><i class="fas fa-undo"></i></button>
+          </div>
+        </div>
+        <div class="city-map-wrap glass-card">
+          <div id="map-popup" class="map-popup" style="display:none;">
+            <div class="map-popup-header">
+              <span id="map-popup-title"></span>
+              <button id="close-map-popup" class="btn-sm"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="map-popup-body" class="map-popup-body"></div>
+          </div>
+          <svg id="city-map-svg" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet"></svg>
+        </div>
+      </section>
+
+      <!-- ENERGY -->
+      <section id="section-energy" class="section">
+        <div class="section-header">
+          <h1><i class="fas fa-bolt"></i> Energy Management</h1>
+          <span class="live-badge"><span class="pulse-dot"></span> Live</span>
+        </div>
+        <div class="energy-dashboard">
+          <div class="energy-card glass-card">
+            <div class="energy-icon total"><i class="fas fa-plug"></i></div>
+            <h4>Total Consumption</h4>
+            <span class="energy-value" id="energy-total">2,450 MWh</span>
+            <div class="energy-bar-wrap"><div class="energy-bar" id="energy-total-bar" style="width:72%"></div></div>
+            <span class="energy-pct" id="energy-total-pct">72%</span>
+          </div>
+          <div class="energy-card glass-card">
+            <div class="energy-icon solar"><i class="fas fa-solar-panel"></i></div>
+            <h4>Solar Production</h4>
+            <span class="energy-value" id="energy-solar">680 MWh</span>
+            <div class="energy-bar-wrap"><div class="energy-bar solar" id="energy-solar-bar" style="width:28%"></div></div>
+            <span class="energy-pct" id="energy-solar-pct">28%</span>
+          </div>
+          <div class="energy-card glass-card">
+            <div class="energy-icon grid"><i class="fas fa-charging-station"></i></div>
+            <h4>Grid Usage</h4>
+            <span class="energy-value" id="energy-grid">1,770 MWh</span>
+            <div class="energy-bar-wrap"><div class="energy-bar grid" id="energy-grid-bar" style="width:52%"></div></div>
+            <span class="energy-pct" id="energy-grid-pct">52%</span>
+          </div>
+          <div class="energy-card glass-card">
+            <div class="energy-icon battery"><i class="fas fa-battery-three-quarters"></i></div>
+            <h4>Battery Storage</h4>
+            <span class="energy-value" id="energy-battery">340 MWh</span>
+            <div class="energy-bar-wrap"><div class="energy-bar battery" id="energy-battery-bar" style="width:85%"></div></div>
+            <span class="energy-pct" id="energy-battery-pct">85%</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- WATER -->
+      <section id="section-water" class="section">
+        <div class="section-header">
+          <h1><i class="fas fa-tint"></i> Water Management</h1>
+          <span class="live-badge"><span class="pulse-dot"></span> Live</span>
+        </div>
+        <div class="water-dashboard">
+          <div class="water-card glass-card">
+            <div class="water-tank-visual">
+              <div class="tank-container">
+                <div class="tank-water" id="water-tank-level" style="height:72%"></div>
+                <span class="tank-pct" id="water-tank-pct">72%</span>
+              </div>
+            </div>
+            <h4>Water Tank Level</h4>
+          </div>
+          <div class="water-stats-col">
+            <div class="water-stat glass-card">
+              <i class="fas fa-faucet"></i>
+              <div>
+                <span class="ws-label">Daily Usage</span>
+                <span class="ws-value" id="water-daily">4.2 ML</span>
+              </div>
+            </div>
+            <div class="water-stat glass-card">
+              <i class="fas fa-vial"></i>
+              <div>
+                <span class="ws-label">Water Quality</span>
+                <span class="ws-value" id="water-quality">96% Pure</span>
+              </div>
+            </div>
+            <div class="water-stat glass-card">
+              <i class="fas fa-exclamation-circle"></i>
+              <div>
+                <span class="ws-label">Leak Detection</span>
+                <span class="ws-value" id="water-leaks">2 Active</span>
+              </div>
+            </div>
+            <div class="water-stat glass-card">
+              <i class="fas fa-chart-area"></i>
+              <div>
+                <span class="ws-label">Flow Rate</span>
+                <span class="ws-value" id="water-flow">1,250 L/min</span>
+              </div>
+            </div>
+          </div>
+          <div class="water-chart-card glass-card">
+            <h4>Hourly Water Usage</h4>
+            <canvas id="chart-water-hourly"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- SYSTEM HEALTH -->
+      <section id="section-system-health" class="section">
+        <div class="section-header">
+          <h1><i class="fas fa-heartbeat"></i> System Health Panel</h1>
+          <span class="live-badge"><span class="pulse-dot"></span> Live</span>
+        </div>
+        <div class="health-dashboard">
+          <div class="health-card glass-card">
+            <div class="health-header">
+              <i class="fas fa-satellite-dish"></i>
+              <h4>Active Sensors</h4>
+            </div>
+            <div class="health-progress-wrap">
+              <div class="health-progress">
+                <div class="health-bar" id="health-sensors-bar" style="width:94%"></div>
+              </div>
+              <span class="health-val" id="health-sensors-val">4,712 / 5,000</span>
+            </div>
+            <span class="health-status online" id="health-sensors-status">Operational</span>
+          </div>
+          <div class="health-card glass-card">
+            <div class="health-header">
+              <i class="fas fa-unlink"></i>
+              <h4>Offline Sensors</h4>
+            </div>
+            <div class="health-progress-wrap">
+              <div class="health-progress">
+                <div class="health-bar warning" id="health-offline-bar" style="width:6%"></div>
+              </div>
+              <span class="health-val" id="health-offline-val">288 / 5,000</span>
+            </div>
+            <span class="health-status warning" id="health-offline-status">Needs Attention</span>
+          </div>
+          <div class="health-card glass-card">
+            <div class="health-header">
+              <i class="fas fa-network-wired"></i>
+              <h4>Network Health</h4>
+            </div>
+            <div class="health-progress-wrap">
+              <div class="health-progress">
+                <div class="health-bar" id="health-network-bar" style="width:98%"></div>
+              </div>
+              <span class="health-val" id="health-network-val">98% Uptime</span>
+            </div>
+            <span class="health-status online" id="health-network-status">Excellent</span>
+          </div>
+          <div class="health-card glass-card">
+            <div class="health-header">
+              <i class="fas fa-server"></i>
+              <h4>Server Status</h4>
+            </div>
+            <div class="health-progress-wrap">
+              <div class="health-progress">
+                <div class="health-bar" id="health-server-bar" style="width:91%"></div>
+              </div>
+              <span class="health-val" id="health-server-val">91% Load</span>
+            </div>
+            <span class="health-status online" id="health-server-status">Running</span>
+          </div>
+          <div class="health-card glass-card">
+            <div class="health-header">
+              <i class="fas fa-desktop"></i>
+              <h4>Monitoring Status</h4>
+            </div>
+            <div class="health-progress-wrap">
+              <div class="health-progress">
+                <div class="health-bar" id="health-monitor-bar" style="width:100%"></div>
+              </div>
+              <span class="health-val" id="health-monitor-val">All Systems Active</span>
+            </div>
+            <span class="health-status online" id="health-monitor-status">Active</span>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
