@@ -1327,12 +1327,8 @@
     /* Welcome notification */
     addNotification('Smart City Dashboard initialized successfully', 'fa-check-circle');
 
-    /* Hide loading screen */
-    setTimeout(() => {
-      $('#loading-screen').classList.add('hidden');
-      setTimeout(() => $('#loading-screen').remove(), 500);
-      showToast('Dashboard ready — all systems operational', 'success');
-    }, 1500);
+    /* Dashboard ready */
+    showToast('Dashboard ready — all systems operational', 'success');
   }
 
   /* Start */
