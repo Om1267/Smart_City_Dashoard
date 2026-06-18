@@ -916,6 +916,29 @@
   }
 
   /* ----------------------------------------
+     SMART LIGHTING
+     ---------------------------------------- */
+  function updateLighting() {
+    const total = 20000;
+    const active = rand(18000, 19800);
+    const faulty = rand(5, 45);
+    const saved = rand(300, 600);
+
+    const la = $('#lighting-active');
+    if(la) {
+      la.textContent = `${formatNum(active)} / ${formatNum(total)}`;
+      const activePct = (active / total) * 100;
+      $('#lighting-active-bar').style.width = `${activePct}%`;
+
+      $('#lighting-saved').textContent = `${saved} kWh`;
+      $('#lighting-saved-bar').style.width = `${clamp((saved / 800) * 100, 10, 100)}%`;
+
+      $('#lighting-faulty').textContent = faulty;
+      $('#lighting-faulty-bar').style.width = `${clamp((faulty / 100) * 100, 2, 100)}%`;
+    }
+  }
+
+  /* ----------------------------------------
      SYSTEM HEALTH
      ---------------------------------------- */
   function updateSystemHealth() {
@@ -982,6 +1005,7 @@
     { name: 'System Health', icon: 'fa-heartbeat', section: 'system-health', type: 'Analytics' },
     { name: 'Energy Management', icon: 'fa-bolt', section: 'energy', type: 'Analytics' },
     { name: 'Waste Management', icon: 'fa-trash', section: 'waste', type: 'Analytics' },
+    { name: 'Smart Lighting', icon: 'fa-lightbulb', section: 'lighting', type: 'Analytics' },
     { name: 'City Overview', icon: 'fa-tachometer-alt', section: 'overview', type: 'Analytics' },
   ];
 
@@ -1273,6 +1297,7 @@
     state.intervals.push(setInterval(updateEnergy, 7000));
     state.intervals.push(setInterval(updateWater, 9000));
     state.intervals.push(setInterval(updateWaste, 8500));
+    state.intervals.push(setInterval(updateLighting, 9500));
     state.intervals.push(setInterval(updateSystemHealth, 6000));
   }
 
@@ -1345,6 +1370,7 @@
     updateEnergy();
     updateWater();
     updateWaste();
+    updateLighting();
     updateSystemHealth();
 
     /* Start auto refresh */
