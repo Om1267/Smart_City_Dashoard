@@ -991,6 +991,35 @@ input:focus, select:focus, textarea:focus {
   letter-spacing: 0.5px; margin-bottom: 8px;
 }
 
+/* ---------- WASTE & LIGHTING ---------- */
+.waste-dashboard, .lighting-dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+.waste-card, .lighting-card { text-align: center; }
+.waste-card h4, .lighting-card h4 {
+  font-size: 0.9rem; font-weight: 700; color: var(--text-secondary);
+}
+.waste-value, .lighting-value {
+  font-size: 1.5rem; font-weight: 800; display: block; margin: 12px 0;
+}
+.waste-bar-wrap, .lighting-bar-wrap {
+  height: 10px; background: var(--glass);
+  border-radius: 6px; overflow: hidden;
+}
+.waste-bar, .lighting-bar {
+  height: 100%; border-radius: 6px;
+  transition: width 1.2s ease;
+}
+.lighting-bar.faulty {
+  animation: blink 1.5s infinite;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
 /* ---------- Responsive ---------- */
 @media (max-width: 1024px) {
   .traffic-dashboard { grid-template-columns: 1fr; }
