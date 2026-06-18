@@ -893,6 +893,29 @@
   }
 
   /* ----------------------------------------
+     WASTE MANAGEMENT
+     ---------------------------------------- */
+  function updateWaste() {
+    const collected = rand(1200, 1800);
+    const totalBins = 2000;
+    const recycling = rand(35, 65);
+    const fleet = rand(70, 95);
+
+    const wc = $('#waste-collected');
+    if(wc) {
+      wc.textContent = `${formatNum(collected)} / ${formatNum(totalBins)}`;
+      const collectedPct = (collected / totalBins) * 100;
+      $('#waste-collected-bar').style.width = `${collectedPct}%`;
+
+      $('#waste-recycling').textContent = `${recycling}%`;
+      $('#waste-recycling-bar').style.width = `${recycling}%`;
+
+      $('#waste-fleet').textContent = `${fleet} Trucks`;
+      $('#waste-fleet-bar').style.width = `${fleet}%`;
+    }
+  }
+
+  /* ----------------------------------------
      SYSTEM HEALTH
      ---------------------------------------- */
   function updateSystemHealth() {
@@ -958,6 +981,7 @@
     { name: 'Weather System', icon: 'fa-cloud-sun', section: 'weather', type: 'Analytics' },
     { name: 'System Health', icon: 'fa-heartbeat', section: 'system-health', type: 'Analytics' },
     { name: 'Energy Management', icon: 'fa-bolt', section: 'energy', type: 'Analytics' },
+    { name: 'Waste Management', icon: 'fa-trash', section: 'waste', type: 'Analytics' },
     { name: 'City Overview', icon: 'fa-tachometer-alt', section: 'overview', type: 'Analytics' },
   ];
 
@@ -1248,6 +1272,7 @@
     state.intervals.push(setInterval(updateAirQuality, 8000));
     state.intervals.push(setInterval(updateEnergy, 7000));
     state.intervals.push(setInterval(updateWater, 9000));
+    state.intervals.push(setInterval(updateWaste, 8500));
     state.intervals.push(setInterval(updateSystemHealth, 6000));
   }
 
@@ -1319,6 +1344,7 @@
     buildCityMap();
     updateEnergy();
     updateWater();
+    updateWaste();
     updateSystemHealth();
 
     /* Start auto refresh */
