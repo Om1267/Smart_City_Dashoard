@@ -93,6 +93,7 @@
       <a href="#" class="nav-link" data-section="water"><i class="fas fa-tint"></i><span>Water</span></a>
       <a href="#" class="nav-link" data-section="system-health"><i class="fas fa-heartbeat"></i><span>System Health</span></a>
       <a href="#" class="nav-link" data-section="waste"><i class="fas fa-trash"></i><span>Waste Mgmt</span></a>
+      <a href="#" class="nav-link" data-section="lighting"><i class="fas fa-lightbulb"></i><span>Smart Lighting</span></a>
     </nav>
     <div class="sidebar-footer">
       <div class="version-badge">v2.4.0</div>
@@ -655,6 +656,34 @@
             <h4>Active Fleet</h4>
             <span class="waste-value" id="waste-fleet" style="font-size: 1.5rem; font-weight: 700; display: block; margin: 1rem 0;">85 Trucks</span>
             <div class="waste-bar-wrap" style="height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;"><div class="waste-bar fleet" id="waste-fleet-bar" style="width:90%; height: 100%; background: #f59e0b; transition: width 1s;"></div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SMART LIGHTING -->
+      <section id="section-lighting" class="section">
+        <div class="section-header">
+          <h1><i class="fas fa-lightbulb"></i> Smart Street Lighting</h1>
+          <span class="live-badge"><span class="pulse-dot"></span> Live</span>
+        </div>
+        <div class="lighting-dashboard" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+          <div class="lighting-card glass-card" style="padding: 1.5rem; text-align: center;">
+            <div class="lighting-icon" style="font-size: 2rem; color: #fbbf24; margin-bottom: 1rem;"><i class="fas fa-lightbulb"></i></div>
+            <h4>Active Lights</h4>
+            <span class="lighting-value" id="lighting-active" style="font-size: 1.5rem; font-weight: 700; display: block; margin: 1rem 0;">18,450 / 20,000</span>
+            <div class="lighting-bar-wrap" style="height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;"><div class="lighting-bar" id="lighting-active-bar" style="width:92.2%; height: 100%; background: #fbbf24; transition: width 1s;"></div></div>
+          </div>
+          <div class="lighting-card glass-card" style="padding: 1.5rem; text-align: center;">
+            <div class="lighting-icon" style="font-size: 2rem; color: #10b981; margin-bottom: 1rem;"><i class="fas fa-leaf"></i></div>
+            <h4>Power Saved</h4>
+            <span class="lighting-value" id="lighting-saved" style="font-size: 1.5rem; font-weight: 700; display: block; margin: 1rem 0;">450 kWh</span>
+            <div class="lighting-bar-wrap" style="height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;"><div class="lighting-bar saved" id="lighting-saved-bar" style="width:65%; height: 100%; background: #10b981; transition: width 1s;"></div></div>
+          </div>
+          <div class="lighting-card glass-card" style="padding: 1.5rem; text-align: center;">
+            <div class="lighting-icon" style="font-size: 2rem; color: #ef4444; margin-bottom: 1rem;"><i class="fas fa-tools"></i></div>
+            <h4>Faulty Units</h4>
+            <span class="lighting-value" id="lighting-faulty" style="font-size: 1.5rem; font-weight: 700; display: block; margin: 1rem 0;">12</span>
+            <div class="lighting-bar-wrap" style="height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;"><div class="lighting-bar faulty" id="lighting-faulty-bar" style="width:10%; height: 100%; background: #ef4444; transition: width 1s;"></div></div>
           </div>
         </div>
       </section>
