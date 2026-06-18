@@ -92,6 +92,7 @@
       <a href="#" class="nav-link" data-section="energy"><i class="fas fa-bolt"></i><span>Energy</span></a>
       <a href="#" class="nav-link" data-section="water"><i class="fas fa-tint"></i><span>Water</span></a>
       <a href="#" class="nav-link" data-section="system-health"><i class="fas fa-heartbeat"></i><span>System Health</span></a>
+      <a href="#" class="nav-link" data-section="waste"><i class="fas fa-trash"></i><span>Waste Mgmt</span></a>
     </nav>
     <div class="sidebar-footer">
       <div class="version-badge">v2.4.0</div>
@@ -626,6 +627,34 @@
               <span class="health-val" id="health-monitor-val">All Systems Active</span>
             </div>
             <span class="health-status online" id="health-monitor-status">Active</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- WASTE MANAGEMENT -->
+      <section id="section-waste" class="section">
+        <div class="section-header">
+          <h1><i class="fas fa-trash"></i> Waste Management</h1>
+          <span class="live-badge"><span class="pulse-dot"></span> Live</span>
+        </div>
+        <div class="waste-dashboard" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+          <div class="waste-card glass-card" style="padding: 1.5rem; text-align: center;">
+            <div class="waste-icon" style="font-size: 2rem; color: var(--primary); margin-bottom: 1rem;"><i class="fas fa-dumpster"></i></div>
+            <h4>Total Bins Collected</h4>
+            <span class="waste-value" id="waste-collected" style="font-size: 1.5rem; font-weight: 700; display: block; margin: 1rem 0;">1,450 / 2,000</span>
+            <div class="waste-bar-wrap" style="height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;"><div class="waste-bar" id="waste-collected-bar" style="width:72.5%; height: 100%; background: var(--primary); transition: width 1s;"></div></div>
+          </div>
+          <div class="waste-card glass-card" style="padding: 1.5rem; text-align: center;">
+            <div class="waste-icon" style="font-size: 2rem; color: #10b981; margin-bottom: 1rem;"><i class="fas fa-recycle"></i></div>
+            <h4>Recycling Rate</h4>
+            <span class="waste-value" id="waste-recycling" style="font-size: 1.5rem; font-weight: 700; display: block; margin: 1rem 0;">45%</span>
+            <div class="waste-bar-wrap" style="height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;"><div class="waste-bar recycling" id="waste-recycling-bar" style="width:45%; height: 100%; background: #10b981; transition: width 1s;"></div></div>
+          </div>
+          <div class="waste-card glass-card" style="padding: 1.5rem; text-align: center;">
+            <div class="waste-icon" style="font-size: 2rem; color: #f59e0b; margin-bottom: 1rem;"><i class="fas fa-truck"></i></div>
+            <h4>Active Fleet</h4>
+            <span class="waste-value" id="waste-fleet" style="font-size: 1.5rem; font-weight: 700; display: block; margin: 1rem 0;">85 Trucks</span>
+            <div class="waste-bar-wrap" style="height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;"><div class="waste-bar fleet" id="waste-fleet-bar" style="width:90%; height: 100%; background: #f59e0b; transition: width 1s;"></div></div>
           </div>
         </div>
       </section>
