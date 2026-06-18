@@ -16,6 +16,8 @@ All notable changes to the Smart City Dashboard project are documented here.
 - Energy Management with animated progress bars
 - Water Management with tank visualization and hourly usage chart
 - System Health Panel with sensor and network monitoring
+- Waste Management module with bins, recycling, and fleet tracking
+- Smart Lighting module with active light tracking and fault detection
 - Dark/Light theme toggle with persistence
 - Notification Center with bell icon and badge counter
 - Smart Search system with Ctrl+K shortcut

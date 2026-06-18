@@ -30,6 +30,8 @@ Smart City Dashboard is a comprehensive urban intelligence platform that simulat
 | **Interactive City Map** | SVG-based zoomable map with clickable landmarks and popup details |
 | **Energy Management** | Animated progress bars for total consumption, solar, grid, and battery storage |
 | **Water Management** | Animated water tank, daily usage, quality, leak detection, and hourly usage chart |
+| **Waste Management** | Real-time monitoring of bins collected, recycling rate, and active fleet tracking |
+| **Smart Lighting** | Real-time tracking of active lights, power saved, and faulty units with animations |
 | **System Health Panel** | Real-time sensor monitoring, network health, server status, and uptime tracking |
 
 ### Additional Features
